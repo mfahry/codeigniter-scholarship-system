@@ -1,0 +1,3 @@
+<h2 align="center" class="logo" style="font-family:Century Gothic;color:#000000; letter-spacing:10px;">Decision Support System</h2>
+<h4 align="center" class="logo" style="font-family:Century Gothic;color:#000000; letter-spacing:5px;"> Simple Addictive Weighting</h4>
+

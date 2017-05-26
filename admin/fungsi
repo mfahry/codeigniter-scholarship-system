@@ -1,0 +1,693 @@
+<?
+session_start();
+include "koneksi.php";
+
+function tabelnilai($beasiswa){
+
+?>
+
+<table id="tableData" border="0" cellspacing="2" cellpadding="2" align="center">
+<tr>
+	<th colspan="8" align="center">
+    	<font color="#00FF00">Tabel Nilai Alternatif</font>
+    </td>
+</tr>
+
+<tr>
+	<th align="center">No
+    </td>
+	<th align="center">NIS
+    </td>
+	<th align="center">Nama Siswa
+    </td>
+    <?
+		$sbobot = "select * from kriteria,bobot where kriteria.kode_kriteria = bobot.kode_kriteria and bobot.kode_beasiswa = '$beasiswa' order by nama_kriteria";
+		$qbobot = mysql_query($sbobot);
+		while($rbobot=mysql_fetch_array($qbobot)){
+			echo	"<th align='center'>$rbobot[nama_kriteria]</td>";
+		}
+	?>
+</tr>
+<?
+	$no = 1;
+	$sql = "select * from siswa,ambil,beasiswa where siswa.nis = ambil.nis and ambil.kode_beasiswa = beasiswa.kode_beasiswa and beasiswa.kode_beasiswa = '$beasiswa' order by siswa.nis ";
+
+	$retval = mysql_query($sql);
+	while($row = mysql_fetch_array($retval)){
+		echo " <tr ";
+		if(($no%2) >0) { echo "id='row-style1'"; } else{ echo "id='row-style2'";}
+		echo ">
+			<td align='center'>".$no."</td>
+			<td>".$row['nis']."</td>
+			<td>".$row['nama']."</td>";
+			
+			$sbobot = "select * from kriteria,bobot where kriteria.kode_kriteria = bobot.kode_kriteria and bobot.kode_beasiswa = '$beasiswa' order by nama_kriteria";
+			$qbobot = mysql_query($sbobot);
+			while($rbobot=mysql_fetch_array($qbobot)){
+				if($rbobot['nama_kriteria']=="nilai_raport"){
+					echo "<td>".$row['nilai_raport']."</td>";
+				}
+				if($rbobot['nama_kriteria']=="Penghasilan Orang Tua"){
+					echo "<td>".$row['penghasilan']."</td>";
+				}
+				if($rbobot['nama_kriteria']=="Prestasi"){
+					echo "<td>".$row['prestasi']."</td>";
+				}
+				if($rbobot['nama_kriteria']=="Tanggungan"){
+					echo "<td>".$row['tanggungan']."</td>";
+				}
+				if($rbobot['nama_kriteria']=="Keaktifan"){
+					echo "<td>".$row['aktif']."</td>";
+				}
+			}
+			
+		echo "</tr>";
+		$no++;
+	}
+	
+?>
+</table>    
+<?
+}
+
+
+function konversi($beasiswa){
+
+?>
+
+<table id="tableData" border="0" cellspacing="2" cellpadding="2" align="center">
+<tr>
+	<th colspan="8" align="center">
+    	<font color="#00FF00">Tabel Nilai Alternatif - Konversi</font>
+    </td>
+</tr>
+
+<tr>
+	<th align="center">No
+    </td>
+	<th align="center">NIS
+    </td>
+	<th align="center">Nama siswa
+    </td>
+    <?
+		$sbobot = "select * from kriteria,bobot where kriteria.kode_kriteria = bobot.kode_kriteria and bobot.kode_beasiswa = '$beasiswa' order by nama_kriteria";
+		$qbobot = mysql_query($sbobot);
+		while($rbobot=mysql_fetch_array($qbobot)){
+			echo	"<th align='center'>$rbobot[nama_kriteria]</td>";
+		}
+	?>
+</tr>
+<?
+	$no = 1;
+	$sql = "select * from siswa,ambil,beasiswa where siswa.nis = ambil.nis and ambil.kode_beasiswa = beasiswa.kode_beasiswa and beasiswa.kode_beasiswa = '$beasiswa' order by siswa.nis ";
+
+	$retval = mysql_query($sql);
+	while($row = mysql_fetch_array($retval)){
+		echo " <tr ";
+		if(($no%2) >0) { echo "id='row-style1'"; } else{ echo "id='row-style2'";}
+		echo ">
+			<td align='center'>".$no."</td>
+			<td>".$row['nis']."</td>
+			<td>".$row['nama']."</td>";
+			
+			$sbobot = "select * from kriteria,bobot where kriteria.kode_kriteria = bobot.kode_kriteria and bobot.kode_beasiswa = '$beasiswa' order by nama_kriteria";
+			$qbobot = mysql_query($sbobot);
+			while($rbobot=mysql_fetch_array($qbobot)){
+				if($rbobot['nama_kriteria']=="nilai_raport"){
+					if($rbobot['perbandingan']=="Linier"){	
+						$rpt = ($row['nilai_raport']/$rbobot['maksimal'])*100;
+					}else{
+						$rpt = ($rbobot['maksimal']/$row['nilai_raport'])*100;
+					}
+					echo "<td>".$rpt."</td>";
+				}
+				if($rbobot['nama_kriteria']=="Penghasilan Orang Tua"){
+					if($rbobot['perbandingan']=="Linier"){	
+						$penghasilan = ($row['penghasilan']/$rbobot['maksimal'])*100;
+					}else{
+						$penghasilan = ($rbobot['maksimal']/$row['penghasilan'])*100;
+					}
+					echo "<td>".$penghasilan."</td>";
+				}
+				if($rbobot['nama_kriteria']=="Prestasi"){
+					if($rbobot['perbandingan']=="Linier"){	
+						$prestasi = ($row['prestasi']/$rbobot['maksimal'])*100;
+					}else{
+						$prestasi = ($rbobot['maksimal']/$row['prestasi'])*100;
+					}
+					echo "<td>".$prestasi."</td>";
+				}
+				if($rbobot['nama_kriteria']=="Tanggungan"){
+					if($rbobot['perbandingan']=="Linier"){	
+						$tanggungan = ($row['tanggungan']/$rbobot['maksimal'])*100;
+					}else{
+						$tanggungan = ($rbobot['maksimal']/$row['tanggungan'])*100;
+					}
+					echo "<td>".$tanggungan."</td>";
+				}
+				if($rbobot['nama_kriteria']=="Keaktifan"){
+					if($rbobot['perbandingan']=="Linier"){	
+						$tanggungan = ($row['aktif']/$rbobot['maksimal'])*100;
+					}else{
+						$tanggungan = ($rbobot['maksimal']/$row['aktif'])*100;
+					}
+					echo "<td>".$tanggungan."</td>";
+				}
+			}
+			
+		echo "</tr>";
+		$no++;
+	}
+	
+?>
+</table>    
+<?
+}
+
+function normalisasi($beasiswa){
+
+$smhs = "select count(mahasiswa.nis) 'jumlah' from siswa,ambil,beasiswa where siswa.nis = ambil.nis and ambil.kode_beasiswa = beasiswa.kode_beasiswa and beasiswa.kode_beasiswa = '$beasiswa' ";
+$qmhs = mysql_query($smhs);
+$rmhs = mysql_fetch_array($qmhs);
+$total = $rmhs['jumlah']+1;
+
+?>
+<table id="tableData" border="0" cellspacing="2" cellpadding="2" align="center" width="300">
+<tr>
+	<th colspan="8" align="center">
+    	<font color="#00FF00">Matriks Nilai - Normalisasi</font>
+    </td>
+</tr>
+
+<tr>
+	<td rowspan="<? echo $total; ?>">R =
+    </td>
+</tr>
+<?
+	$no = 1;
+	$sql = "select * from siswa,ambil,beasiswa where siswa.nis = ambil.nis and ambil.kode_beasiswa = beasiswa.kode_beasiswa and beasiswa.kode_beasiswa = '$beasiswa' order by siswa.nis ";
+
+	$retval = mysql_query($sql);
+	
+	$smax = "select max(nilai_raport) 'nilai_raport',min(penghasilan) 'penghasilan', max(tanggungan) 'tanggungan',max(prestasi) 'prestasi', max(aktif) 'aktif' from siswa,ambil,beasiswa where siswa.nis = ambil.nis and ambil.kode_beasiswa = beasiswa.kode_beasiswa and beasiswa.kode_beasiswa = '$beasiswa' order by siswa.nis ";
+	$qmax = mysql_query($smax);
+	$rmax = mysql_fetch_array($qmax);
+	$maxrpt= $rmax['nilai_raport'];
+	$maxpenghasilan = $rmax['penghasilan'];
+	$maxtanggungan = $rmax['tanggungan'];
+	$maxaktif = $rmax['aktif'];
+	$maxprestasi = $rmax['prestasi'];
+	
+	while($row = mysql_fetch_array($retval)){
+		echo " <tr>";
+			
+			$sbobot = "select * from kriteria,bobot where kriteria.kode_kriteria = bobot.kode_kriteria and bobot.kode_beasiswa = '$beasiswa' order by nama_kriteria";
+			$qbobot = mysql_query($sbobot);
+			while($rbobot=mysql_fetch_array($qbobot)){
+					
+				if($rbobot['nama_kriteria']=="IPK"){
+					$perbandinganipk = ($maxipk/$rbobot['maksimal'])*100;
+					$ipk = ($row['ipk']/$rbobot['maksimal'])*100;
+					$normipk = $ipk / $perbandinganipk;
+					$normipk = substr($normipk,0,4);
+					
+					echo "<td>".$normipk."</td>";
+				}
+				if($rbobot['nama_kriteria']=="Penghasilan Orang Tua"){
+					$perbandinganpenghasilan = ($rbobot['maksimal']/$maxpenghasilan)*100; 
+					$penghasilan = ($rbobot['maksimal']/$row['penghasilan'])*100;
+					$normpenghasilan = $penghasilan / $perbandinganpenghasilan;
+					$normpenghasilan = substr($normpenghasilan,0,4);
+					echo "<td>".$normpenghasilan."</td>";
+				}
+				if($rbobot['nama_kriteria']=="Prestasi"){
+					$perbandinganprestasi = ($maxprestasi/$rbobot['maksimal'])*100;
+					$prestasi = ($row['prestasi']/$rbobot['maksimal'])*100;
+					if($perbandinganprestasi==0){
+						$normprestasi = 0;						
+					}else{
+						$normprestasi = $prestasi / $perbandinganprestasi;
+						$normprestasi = substr($normprestasi,0,4);
+					}
+					echo "<td>".$normprestasi."</td>";
+				}
+				if($rbobot['nama_kriteria']=="Tanggungan"){
+					$perbandingantanggungan = ($maxtanggungan/$rbobot['maksimal'])*100;
+					$tanggungan = ($row['tanggungan']/$rbobot['maksimal'])*100;
+					if($perbandingantanggungan==0){
+						$normtanggungan = 0;	
+					}else{
+						$normtanggungan = $tanggungan / $perbandingantanggungan;
+						$normtanggungan = substr($normtanggungan,0,4);
+					}
+					echo "<td>".$normtanggungan."</td>";
+				}
+				if($rbobot['nama_kriteria']=="Keaktifan"){
+					$perbandinganaktif = ($maxaktif/$rbobot['maksimal'])*100;
+					$aktif = ($row['aktif']/$rbobot['maksimal'])*100;
+					if($perbandinganaktif==0){
+						$normaktif = 0;	
+					}else{
+						$normaktif = $aktif / $perbandinganaktif;
+						$normaktif = substr($normaktif,0,4);
+					}
+					echo "<td>".$normaktif."</td>";
+				}
+			}
+			
+		echo "</tr>";
+		$no++;
+	}
+	
+?>
+</table>  
+<?
+	
+}
+
+function bobot($beasiswa){
+	
+?>
+	<table id="tableData" border="0" cellspacing="2" cellpadding="2" align="center" width="300">
+<tr>
+	<th colspan="8" align="center">
+    	<font color="#00FF00">Matrix Bobot</font>
+    </td>
+</tr>
+
+<tr>
+	<td align="center" rowspan='8'>W =
+    </td>
+</tr>
+    <?
+		$sbobot = "select * from kriteria,bobot where kriteria.kode_kriteria = bobot.kode_kriteria and bobot.kode_beasiswa = '$beasiswa' order by nama_kriteria";
+		$qbobot = mysql_query($sbobot);
+		while($rbobot=mysql_fetch_array($qbobot)){
+			$persentase = $rbobot['persentase']/100;
+			echo	"
+				<tr>
+					<td align='center'>$persentase</td>
+				</tr>
+			";
+		}
+	?>
+</table>
+<?
+}
+
+function saw($beasiswa){
+
+?>
+<table id="tableData" border="0" cellspacing="2" cellpadding="2" align="center">
+<tr>
+	<th colspan="8" align="center">
+    	<font color="#00FF00">Hasil Akhir SAW</font>
+    </td>
+</tr>
+
+<tr>
+	<th align="center">No
+    </td>
+	<th align="center">NIM
+    </td>
+	<th align="center">Nama Mahasiswa
+    </td>
+    <th align="center">Perhitungan
+    </td>
+    <th align="center">Total
+    </td>    
+</tr>
+<?
+	$no = 1;
+	$sql = "select * from mahasiswa,ambil,beasiswa where mahasiswa.nim = ambil.nim and ambil.kode_beasiswa = beasiswa.kode_beasiswa and beasiswa.kode_beasiswa = '$beasiswa' order by mahasiswa.nim ";
+
+	$retval = mysql_query($sql);
+	
+	$smax = "select max(ipk) 'ipk',min(penghasilan) 'penghasilan', max(tanggungan) 'tanggungan',max(prestasi) 'prestasi', max(aktif) 'aktif' from mahasiswa,ambil,beasiswa where mahasiswa.nim = ambil.nim and ambil.kode_beasiswa = beasiswa.kode_beasiswa and beasiswa.kode_beasiswa = '$beasiswa' order by mahasiswa.nim ";
+	$qmax = mysql_query($smax);
+	$rmax = mysql_fetch_array($qmax);
+	$maxipk= $rmax['ipk'];
+	$maxpenghasilan = $rmax['penghasilan'];
+	$maxtanggungan = $rmax['tanggungan'];
+	$maxprestasi = $rmax['prestasi'];
+	$maxaktif = $rmax['aktif'];
+	
+	while($row = mysql_fetch_array($retval)){
+		echo " <tr ";
+		if(($no%2) >0) { echo "id='row-style1'"; } else{ echo "id='row-style2'";}
+		echo ">
+			<td align='center'>".$no."</td>
+			<td>".$row['nim']."</td>
+			<td>".$row['nama']."</td>";
+			
+			$sbobot = "select * from kriteria,bobot where kriteria.kode_kriteria = bobot.kode_kriteria and bobot.kode_beasiswa = '$beasiswa' order by nama_kriteria";
+			$qbobot = mysql_query($sbobot);
+			while($rbobot=mysql_fetch_array($qbobot)){
+					
+				if($rbobot['nama_kriteria']=="IPK"){
+					$perbandinganipk = ($maxipk/$rbobot['maksimal'])*100;
+					$ipk = ($row['ipk']/$rbobot['maksimal'])*100;
+					$normipk = $ipk / $perbandinganipk;
+					$normipk = substr($normipk,0,4);
+					$bobotipk = $rbobot['persentase']/100;				
+				}
+				if($rbobot['nama_kriteria']=="Penghasilan Orang Tua"){
+					$perbandinganpenghasilan = ($rbobot['maksimal']/$maxpenghasilan)*100; 
+					$penghasilan = ($rbobot['maksimal']/$row['penghasilan'])*100;
+					$normpenghasilan = $penghasilan / $perbandinganpenghasilan;
+					$normpenghasilan = substr($normpenghasilan,0,4);
+					$bobotpenghasilan = $rbobot['persentase']/100;
+				}
+				if($rbobot['nama_kriteria']=="Prestasi"){
+					$perbandinganprestasi = ($maxprestasi/$rbobot['maksimal'])*100;
+					$prestasi = ($row['prestasi']/$rbobot['maksimal'])*100;
+					if($perbandinganprestasi==0){
+						$normprestasi = 0;						
+					}else{
+						$normprestasi = $prestasi / $perbandinganprestasi;
+						$normprestasi = substr($normprestasi,0,4);
+					}
+					$bobotprestasi = $rbobot['persentase']/100;
+				}
+				if($rbobot['nama_kriteria']=="Tanggungan"){
+					$perbandingantanggungan = ($maxtanggungan/$rbobot['maksimal'])*100;
+					$tanggungan = ($row['tanggungan']/$rbobot['maksimal'])*100;
+					if($perbandingantanggungan==0){
+						$normtanggungan = 0;	
+					}else{
+						$normtanggungan = $tanggungan / $perbandingantanggungan;
+						$normtanggungan = substr($normtanggungan,0,4);
+					}
+					$bobottanggungan= $rbobot['persentase']/100;
+				}
+				if($rbobot['nama_kriteria']=="Keaktifan"){
+					$perbandinganaktif = ($maxaktif/$rbobot['maksimal'])*100;
+					$aktif = ($row['aktif']/$rbobot['maksimal'])*100;
+					if($perbandinganaktif==0){
+						$normaktif = 0;	
+					}else{
+						$normaktif = $aktif / $perbandinganaktif;
+						$normaktif = substr($normaktif,0,4);
+					}
+					$bobotaktif= $rbobot['persentase']/100;
+				}
+								
+			}
+		$total = ($bobotipk * $normipk) + ($bobotaktif * $normaktif) + ($bobotpenghasilan * $normpenghasilan) + ($bobotprestasi * $normprestasi) + ($bobottanggungan * $normtanggungan)  ;
+		
+		if($bobotipk!=""){
+			$tampilipk=	"($bobotipk x $normipk)";
+		}
+		
+		if($bobotaktif!=""){
+			if($bobotipk!=""){
+				$tampilaktif= " + ($bobotaktif x $normaktif)";			
+			}else{
+				$tampilaktif = "($bobotaktif x $normaktif)";
+			}
+		}
+		
+		if($bobotpenghasilan!=""){
+			if($bobotipk!=""){
+				$tampilpenghasilan = " + ($bobotpenghasilan x $normpenghasilan)";			
+			}else{
+				if($bobotaktif!=""){
+					$tampilpenghasilan = " + ($bobotpenghasilan x $normpenghasilan)";								
+				}else{
+					$tampilpenghasilan = "($bobotpenghasilan x $normpenghasilan)";
+				}
+			}
+		}
+		
+		if($bobotprestasi!=""){
+			if($bobotipk!=""){
+				$tampilprestasi = " + ($bobotprestasi x $normprestasi)";		
+			}else{
+				if($bobotaktif!=""){
+					$tampilprestasi = " + ($bobotprestasi x $normprestasi)";					
+				}else{
+					if($bobotpenghasilan!=""){
+						$tampilprestasi = " + ($bobotprestasi x $normprestasi)";		
+					}else{
+						$tampilprestasi = "($bobotprestasi x $normprestasi)";				
+					}
+				}
+			}
+		}
+		if($bobottanggungan!=""){
+			if($bobotipk!=""){
+				$tampiltanggungan = " + ($bobottanggungan x $normtanggungan)";
+			}else{
+				if($bobotaktif!=""){
+					$tampiltanggungan = " + ($bobottanggungan x $normtanggungan)";					
+				}else{					
+					if($bobotpenghasilan!=""){
+						$tampiltanggungan = " + ($bobottanggungan x $normtanggungan)";
+					}else{
+						if($bobotprestasi!=""){
+							$tampiltanggungan = " + ($bobottanggungan x $normtanggungan)";
+						}else{
+							$tampiltanggungan = "($bobottanggungan x $normtanggungan)";	
+						}
+					}	
+				}
+			}
+		}
+		
+		echo "<td> $tampilipk $tampilaktif $tampilpenghasilan $tampilprestasi $tampiltanggungan</td>";
+		echo "<td>$total </td>";
+		
+		echo "</tr>";
+		$no++;
+	}
+	
+?>
+</table>  
+<?
+}
+
+function inputranking($beasiswa){
+	$delete = "delete from ranking";
+	mysql_query($delete);
+
+	$sql = "select * from mahasiswa,ambil,beasiswa where mahasiswa.nim = ambil.nim and ambil.kode_beasiswa = beasiswa.kode_beasiswa and beasiswa.kode_beasiswa = '$beasiswa' order by mahasiswa.nim ";
+
+	$retval = mysql_query($sql);
+	
+	$smax = "select max(ipk) 'ipk',min(penghasilan) 'penghasilan', max(tanggungan) 'tanggungan',max(prestasi) 'prestasi', max(aktif) 'aktif' from mahasiswa,ambil,beasiswa where mahasiswa.nim = ambil.nim and ambil.kode_beasiswa = beasiswa.kode_beasiswa and beasiswa.kode_beasiswa = '$beasiswa' order by mahasiswa.nim ";
+	$qmax = mysql_query($smax);
+	$rmax = mysql_fetch_array($qmax);
+	$maxipk= $rmax['ipk'];
+	$maxpenghasilan = $rmax['penghasilan'];
+	$maxtanggungan = $rmax['tanggungan'];
+	$maxprestasi = $rmax['prestasi'];
+	$maxaktif = $rmax['aktif'];
+	
+	while($row = mysql_fetch_array($retval)){
+		$nim = $row['nim'];
+			
+			$sbobot = "select * from kriteria,bobot where kriteria.kode_kriteria = bobot.kode_kriteria and bobot.kode_beasiswa = '$beasiswa' order by nama_kriteria";
+			$qbobot = mysql_query($sbobot);
+			while($rbobot=mysql_fetch_array($qbobot)){
+					
+				if($rbobot['nama_kriteria']=="IPK"){
+					$perbandinganipk = ($maxipk/$rbobot['maksimal'])*100;
+					$ipk = ($row['ipk']/$rbobot['maksimal'])*100;
+					$normipk = $ipk / $perbandinganipk;
+					$normipk = substr($normipk,0,4);
+					$bobotipk = $rbobot['persentase']/100;				
+				}
+				if($rbobot['nama_kriteria']=="Penghasilan Orang Tua"){
+					$perbandinganpenghasilan = ($rbobot['maksimal']/$maxpenghasilan)*100; 
+					$penghasilan = ($rbobot['maksimal']/$row['penghasilan'])*100;
+					$normpenghasilan = $penghasilan / $perbandinganpenghasilan;
+					$normpenghasilan = substr($normpenghasilan,0,4);
+					$bobotpenghasilan = $rbobot['persentase']/100;
+				}
+				if($rbobot['nama_kriteria']=="Prestasi"){
+					$perbandinganprestasi = ($maxprestasi/$rbobot['maksimal'])*100;
+					$prestasi = ($row['prestasi']/$rbobot['maksimal'])*100;
+					if($perbandinganprestasi==0){
+						$normprestasi = 0;						
+					}else{
+						$normprestasi = $prestasi / $perbandinganprestasi;
+						$normprestasi = substr($normprestasi,0,4);
+					}
+					$bobotprestasi = $rbobot['persentase']/100;
+				}
+				if($rbobot['nama_kriteria']=="Tanggungan"){
+					$perbandingantanggungan = ($maxtanggungan/$rbobot['maksimal'])*100;
+					$tanggungan = ($row['tanggungan']/$rbobot['maksimal'])*100;
+					if($perbandingantanggungan==0){
+						$normtanggungan = 0;	
+					}else{
+						$normtanggungan = $tanggungan / $perbandingantanggungan;
+						$normtanggungan = substr($normtanggungan,0,4);
+					}
+					$bobottanggungan=$rbobot['persentase']/100;
+				}
+				if($rbobot['nama_kriteria']=="Keaktifan"){
+					$perbandinganaktif = ($maxaktif/$rbobot['maksimal'])*100;
+					$aktif = ($row['aktif']/$rbobot['maksimal'])*100;
+					if($perbandinganaktif==0){
+						$normaktif = 0;	
+					}else{
+						$normaktif = $aktif / $perbandinganaktif;
+						$normaktif = substr($normaktif,0,4);
+					}
+					$bobotaktif= $rbobot['persentase']/100;
+				}
+									
+			}
+		$total = ($bobotipk * $normipk) + ($bobotpenghasilan * $normpenghasilan) + ($bobotprestasi * $normprestasi) + ($bobottanggungan * $normtanggungan) + ($bobotaktif * $normaktif) ;
+		$insert = "insert into ranking(nim,nilai) values('$nim','$total')";
+		mysql_query($insert);
+	}
+	
+}
+
+function ranking($beasiswa,$jumlah){
+
+?>
+
+<table id="tableData" border="0" cellspacing="2" cellpadding="2" align="center">
+<tr>
+	<th colspan="8" align="center">
+    	<font color="#00FF00">Hasil Penilaian Simple Additive Weighting</font>
+    </td>
+</tr>
+
+<tr>
+	<th align="center">No
+    </td>
+	<th align="center">NIM
+    </td>
+	<th align="center">Nama Mahasiswa
+    </td>
+	<th align="center">Nilai Total
+    </td>
+	<th align="center">Status
+    </td>
+	<th align="center">Rekomendasi
+    </td>
+</tr>
+<?
+	$no = 1;
+	$sql = "select * from mahasiswa,ranking where mahasiswa.nim = ranking.nim order by nilai desc ";
+
+	$retval = mysql_query($sql);
+	while($row = mysql_fetch_array($retval)){
+		if ($no<=$jumlah){
+			echo " <tr ";
+			if(($no%2) >0) { echo "id='row-style1'"; } else{ echo "id='row-style2'";}
+			echo ">
+				<td align='center'>".$no."</td>
+				<td>".$row['nim']."</td>
+				<td>".$row['nama']."</td>
+				<td>".$row['nilai']."</td>
+				<td>Diterima</td>
+				<td> - </td>";
+			echo "</tr>";
+		}else{
+			echo " <tr ";
+			if(($no%2) >0) { echo "id='row-style1'"; } else{ echo "id='row-style2'";}
+			echo ">
+				<td align='center'>".$no."</td>
+				<td>".$row['nim']."</td>
+				<td>".$row['nama']."</td>
+				<td>".$row['nilai']."</td>
+				<td><font color='#FF0000'>Ditolak</td>
+				<td>";
+				$nilai = $row['nilai'];
+				$sbea = "select * from beasiswa where standar < $nilai and kode_beasiswa!= '$beasiswa'";
+				$qbea = mysql_query($sbea);
+				while ($rbea = mysql_fetch_array($qbea)){
+					echo "| ".$rbea['nama_beasiswa']." | ";	
+				}
+				echo " </td>";
+			echo "</tr>";
+		}
+		$no++;
+	}
+echo "<tr";
+	if(($no%2) >0) { echo "id='row-style1'"; } else{ echo "id='row-style2'";}
+echo ">
+		<td colspan='6' align='center'><a href='?page=detail&beasiswa=$beasiswa&jumlah=$jumlah'>Detail</a></td>
+	</tr> ";
+?>
+</table>    
+<?
+}
+
+function rankingdetail($beasiswa,$jumlah){
+
+?>
+
+<table id="tableData" border="0" cellspacing="2" cellpadding="2" align="center">
+<tr>
+	<th colspan="8" align="center">
+    	<font color="#00FF00">Hasil Penilaian Simple Additive Weighting</font>
+    </td>
+</tr>
+
+<tr>
+	<th align="center">No
+    </td>
+	<th align="center">NIM
+    </td>
+	<th align="center">Nama Mahasiswa
+    </td>
+	<th align="center">Nilai Total
+    </td>
+	<th align="center">Status
+    </td>
+</tr>
+<?
+	$no = 1;
+	$sql = "select * from mahasiswa,ranking where mahasiswa.nim = ranking.nim order by nilai desc ";
+
+	$retval = mysql_query($sql);
+	while($row = mysql_fetch_array($retval)){
+		if ($no<=$jumlah){
+			echo " <tr ";
+			if(($no%2) >0) { echo "id='row-style1'"; } else{ echo "id='row-style2'";}
+			echo ">
+				<td align='center'>".$no."</td>
+				<td>".$row['nim']."</td>
+				<td>".$row['nama']."</td>
+				<td>".$row['nilai']."</td>
+				<td>Diterima</td>";
+			echo "</tr>";
+		}else{
+			echo " <tr ";
+			if(($no%2) >0) { echo "id='row-style1'"; } else{ echo "id='row-style2'";}
+			echo ">
+				<td align='center'>".$no."</td>
+				<td>".$row['nim']."</td>
+				<td>".$row['nama']."</td>
+				<td>".$row['nilai']."</td>
+				<td><font color='#FF0000'>Ditolak</td>";
+			echo "</tr>";
+		}
+		$no++;
+	}
+	
+?>
+</table>    
+<?
+}
+/*
+tabelnilai(2);
+echo "<p align='center'></p>";
+konversi(2);
+echo "<p align='center'></p>";
+normalisasi(2);
+echo "<p align='center'></p>";
+bobot(2);
+echo "<p align='center'></p>";
+saw(2);
+echo "<p align='center'></p>";
+inputranking(2);
+ranking(2,2);
+*/
+?>
